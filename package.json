@@ -36,13 +36,15 @@
         "url": "https://github.com/StartBootstrap/startbootstrap-resume.git"
     },
     "dependencies": {
-        "bootstrap": "5.2.3"
+        "bootstrap": "5.2.3",
+        "bootstrap-icons": "^1.11.3"
     },
     "devDependencies": {
         "autoprefixer": "10.4.14",
         "browser-sync": "2.29.1",
         "chokidar": "3.5.3",
         "concurrently": "6.3.0",
+        "gh-pages": "^6.1.1",
         "postcss": "8.4.21",
         "prettier": "2.8.6",
         "pug": "3.0.2",
