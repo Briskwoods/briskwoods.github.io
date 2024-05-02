@@ -10954,7 +10954,17 @@ section.resume-section {
   padding-bottom: 5rem;
   max-width: 75rem;
 }
+section.showcase-section {
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
 section.resume-section .resume-section-content {
+  width: 100%;
+}
+section.showcase-section .showcase-section-content {
   width: 100%;
 }
 
@@ -10970,4 +10980,28 @@ section.resume-section .resume-section-content {
     padding-top: 5rem;
     padding-bottom: 5rem;
   }
+
+  .video-container {
+      padding-left: 3rem;
+    padding-right: 3rem;
+    padding-top: 5rem;
+    padding-bottom: 1rem;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    justify-content: space-evenly;
+  }
+
+  @media (min-width: 768px) {
+  section.showcase-section {
+    min-height: 65vh;
+  }
+}
+@media (min-width: 992px) {
+  section.showcase-section {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
 }
