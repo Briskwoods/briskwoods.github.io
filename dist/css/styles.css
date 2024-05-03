@@ -10970,7 +10970,7 @@ section.showcase-section .showcase-section-content {
 
 @media (min-width: 768px) {
   section.resume-section {
-    min-height: 100vh;
+    min-height: 65vh;
   }
 }
 @media (min-width: 992px) {
@@ -11003,5 +11003,22 @@ section.showcase-section .showcase-section-content {
     padding-top: 5rem;
     padding-bottom: 5rem;
   }
+  .round-button {
+  background-color: #04AA6D;
+  border: none;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+}
+
+.button1 {border-radius: 2px;}
+.button2 {border-radius: 4px;}
+.button3 {border-radius: 8px;}
+.button4 {border-radius: 12px;}
+.button5 {border-radius: 50%;}
 
 }
