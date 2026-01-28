@@ -822,7 +822,22 @@ iframe {
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
     color: var(--text-secondary);
+    margin-right: 0.5rem;
     margin-top: var(--spacing-sm);
+}
+
+.snippet-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: var(--spacing-sm);
+}
+
+/* Different colors for different categories */
+.snippet-category:first-child {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
 }
 
 /* Snippet Modal */

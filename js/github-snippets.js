@@ -9,7 +9,7 @@
   // Configuration
   const getConfig = () => ({
     username: document.getElementById('github-username')?.value || 'Briskwoods',
-      repo: document.getElementById('github-repo')?.value || 'SonOfMabinSnippets',
+    repo: document.getElementById('github-repo')?.value || 'CodeSnippets',
     branch: document.getElementById('github-branch')?.value || 'main',
     folder: document.getElementById('snippets-folder')?.value || 'snippets'
   });
@@ -51,6 +51,7 @@
       title: filename.replace(/\.(cs|js|py|java|cpp|c|ts|jsx|tsx)$/i, ''),
       description: '',
       category: 'utilities',
+      categories: [], // Support multiple categories
       language: getLanguageFromExtension(filename),
       tags: []
     };
@@ -69,9 +70,15 @@
         metadata.description = line.split('@description:')[1].trim().replace(/[*\/]/g, '');
       }
       
-      // Check for @category
+      // Check for @category (can be comma-separated for multiple)
       if (line.includes('@category:')) {
-        metadata.category = line.split('@category:')[1].trim().toLowerCase().replace(/[*\/]/g, '');
+        const categoryStr = line.split('@category:')[1].trim().toLowerCase().replace(/[*\/]/g, '');
+        const cats = categoryStr.split(',').map(c => c.trim()).filter(c => c);
+        
+        if (cats.length > 0) {
+          metadata.category = cats[0]; // Primary category
+          metadata.categories = cats; // All categories
+        }
       }
       
       // Check for @tags
@@ -125,7 +132,14 @@
   const createSnippetCard = (snippet) => {
     const card = document.createElement('div');
     card.className = 'snippet-card';
+    // Store all categories for filtering
     card.dataset.category = snippet.metadata.category;
+    card.dataset.categories = snippet.metadata.categories.join(',');
+    
+    // Show all categories as badges
+    const categoryBadges = snippet.metadata.categories.length > 0
+      ? snippet.metadata.categories.map(cat => `<span class="snippet-category">${cat}</span>`).join(' ')
+      : `<span class="snippet-category">${snippet.metadata.category}</span>`;
     
     card.innerHTML = `
       <div class="snippet-card-header">
@@ -137,7 +151,7 @@
         <span><i class="fas fa-code"></i> ${snippet.lines} lines</span>
         ${snippet.metadata.tags.length > 0 ? `<span><i class="fas fa-tags"></i> ${snippet.metadata.tags.slice(0, 2).join(', ')}</span>` : ''}
       </div>
-      <span class="snippet-category">${snippet.metadata.category}</span>
+      <div class="snippet-categories">${categoryBadges}</div>
     `;
     
     card.addEventListener('click', () => openSnippetModal(snippet));
@@ -149,10 +163,17 @@
     const container = document.getElementById('snippets-container');
     container.innerHTML = '';
     
-    // Filter by category
+    // Filter by category - now supports multiple categories
     const filtered = currentCategory === 'all' 
       ? snippets 
-      : snippets.filter(s => s.metadata.category === currentCategory);
+      : snippets.filter(s => {
+          // Check if the snippet has multiple categories
+          if (s.metadata.categories && s.metadata.categories.length > 0) {
+            return s.metadata.categories.includes(currentCategory);
+          }
+          // Fallback to single category
+          return s.metadata.category === currentCategory;
+        });
     
     if (filtered.length === 0) {
       container.innerHTML = `
