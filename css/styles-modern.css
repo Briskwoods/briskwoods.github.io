@@ -189,7 +189,7 @@ p {
 }
 
 #about {
-    padding-top: 10rem !important;
+    padding-top: 12rem !important;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -199,14 +199,18 @@ p {
         margin-top: 0;
     }
 
+    #about h1 {
+        margin-top: 0;
+    }
+
 /* Ensure name has proper top margin on desktop */
 @media (min-width: 992px) {
     #about {
-        padding-top: 8rem !important;
+        padding-top: 10rem !important;
     }
 
         #about h1 {
-            margin-top: 0;
+            margin-top: var(--spacing-lg);
         }
 }
 
@@ -264,8 +268,10 @@ h1 .text-primary {
 
 .theme-toggle {
     position: fixed;
-    top: 1rem;
-    right: 1rem;
+    top: auto;
+    bottom: 2rem;
+    right: 2rem;
+    left: auto;
     z-index: 10000;
     width: 50px;
     height: 50px;
@@ -300,11 +306,19 @@ h1 .text-primary {
         transform: rotate(20deg);
     }
 
-/* Adjust position on desktop with sidebar */
+/* Adjust position on mobile */
+@media (max-width: 991.98px) {
+    .theme-toggle {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+}
+
+/* Keep it visible on desktop with sidebar */
 @media (min-width: 992px) {
     .theme-toggle {
         right: 2rem;
-        top: 2rem;
+        bottom: 2rem;
     }
 }
 
@@ -388,7 +402,7 @@ h1 .text-primary {
 
     /* First section needs extra top padding to clear the navbar */
     .resume-section:first-of-type {
-        padding-top: 10rem;
+        padding-top: 12rem;
     }
 
 .resume-section-content {
@@ -1146,8 +1160,8 @@ code[class*="language-"] {
 
 @media (max-width: 991.98px) {
     .theme-toggle {
-        top: 10px;
-        right: 10px;
+        bottom: 1.5rem;
+        right: 1.5rem;
         width: 45px;
         height: 45px;
     }
@@ -1159,11 +1173,11 @@ code[class*="language-"] {
 
         /* First section on mobile needs to account for mobile navbar */
         .resume-section:first-of-type {
-            padding-top: calc(56px + 5rem);
+            padding-top: calc(56px + 6rem);
         }
 
     #about {
-        padding-top: calc(56px + 5rem) !important;
+        padding-top: calc(56px + 6rem) !important;
     }
 
     .resume-section-content {
@@ -1215,6 +1229,7 @@ code[class*="language-"] {
 
     iframe {
         height: 250px;
+        width: 100%;
     }
 
     .resume-section {
@@ -1223,10 +1238,25 @@ code[class*="language-"] {
 
     .resume-section-content {
         padding: 0;
+        max-width: 100%;
     }
 
     h1 {
-        font-size: clamp(2rem, 8vw, 3rem);
+        font-size: clamp(1.75rem, 8vw, 2.5rem);
+        word-wrap: break-word;
+    }
+
+    h2 {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    h3 {
+        font-size: clamp(1.25rem, 5vw, 1.5rem);
+    }
+
+    .lead {
+        font-size: 1rem;
+        line-height: 1.6;
     }
 
     #sideNav .navbar-brand {
@@ -1245,6 +1275,167 @@ code[class*="language-"] {
 
     .subheading {
         font-size: 0.875rem;
+    }
+
+    /* Card adjustments for mobile */
+    .d-flex.flex-column.flex-md-row {
+        padding: var(--spacing-md);
+    }
+
+    /* Category buttons stack better on mobile */
+    .code-categories {
+        gap: var(--spacing-sm);
+    }
+
+    .category-btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.8rem;
+    }
+
+    /* Snippet cards more compact on mobile */
+    .snippet-card {
+        padding: var(--spacing-md);
+    }
+
+    .snippet-title {
+        font-size: 1rem;
+    }
+
+    .snippet-language {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+    }
+
+    .snippet-description {
+        font-size: 0.85rem;
+    }
+
+    /* Modal adjustments for phones */
+    .snippet-modal {
+        padding: 0.5rem;
+    }
+
+    .snippet-modal-content {
+        max-height: 95vh;
+        border-radius: var(--radius-md);
+    }
+
+    .snippet-modal-header {
+        padding: var(--spacing-sm) var(--spacing-md);
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .snippet-modal-header h3 {
+            font-size: 1rem;
+            min-width: auto;
+            width: 100%;
+        }
+
+    .snippet-modal-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .modal-copy-btn,
+    .modal-github-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+        .modal-github-link span {
+            display: none; /* Hide "View on" text on mobile */
+        }
+
+    /* Code blocks on mobile */
+    .snippet-modal-body {
+        padding: var(--spacing-sm);
+    }
+
+        .snippet-modal-body pre {
+            max-height: calc(95vh - 150px);
+            font-size: 0.7rem;
+        }
+
+    /* Dark mode toggle smaller on mobile */
+    .theme-toggle {
+        width: 45px;
+        height: 45px;
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+        .theme-toggle i {
+            font-size: 1.1rem;
+        }
+
+    /* Ensure content doesn't get too wide */
+    body {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    /* Experience cards stack properly */
+    .flex-shrink-0 {
+        margin-top: var(--spacing-sm);
+    }
+}
+
+/* Extra small phones (iPhone SE, small Android phones) */
+@media (max-width: 374px) {
+    h1 {
+        font-size: 1.5rem !important;
+    }
+
+    h2 {
+        font-size: 1.35rem !important;
+    }
+
+    .lead {
+        font-size: 0.9rem;
+    }
+
+    .subheading {
+        font-size: 0.75rem;
+    }
+
+    .social-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
+    }
+
+    .container-fluid {
+        padding-right: 0.75rem;
+        padding-left: 0.75rem;
+    }
+
+    .resume-section {
+        padding: var(--spacing-lg) 0.75rem;
+    }
+
+    .category-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+
+    .snippet-card {
+        padding: 0.75rem;
+    }
+
+    .snippet-title {
+        font-size: 0.9rem;
+    }
+
+    .d-flex.flex-column.flex-md-row {
+        padding: 0.75rem;
+    }
+
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        bottom: 0.75rem;
+        right: 0.75rem;
     }
 }
 

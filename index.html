@@ -23,12 +23,12 @@
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
     <!-- Inline theme detection to prevent flash -->
     <script>
-        (function () {
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
-        })();
+            (function() {
+                const savedTheme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+            })();
     </script>
     <!-- Font Awesome icons (free version)-->
     <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js" crossorigin="anonymous"></script>
@@ -319,7 +319,7 @@
                 <!-- GitHub Config -->
                 <div class="code-config" style="display: none;">
                     <input type="text" id="github-username" value="Briskwoods" />
-                    <input type="text" id="github-repo" value="CodeSnippets" />
+                    <input type="text" id="github-repo" value="SonOfMabinSnippets" />
                     <input type="text" id="github-branch" value="main" />
                     <input type="text" id="snippets-folder" value="snippets" />
                 </div>
