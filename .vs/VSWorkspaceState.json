@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\css"
+    "\\css",
+    "\\js"
   ],
-  "SelectedNode": "\\css\\styles.css",
+  "SelectedNode": "\\js\\github-snippets.js",
   "PreviewInSolutionExplorer": false
 }
