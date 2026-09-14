@@ -1,0 +1,24 @@
+---
+const socials = [
+  { href: "https://www.linkedin.com/in/jeffrey-gichuki-710011144/", label: "LinkedIn", icon: "fab fa-linkedin-in" },
+  { href: "https://github.com/Briskwoods", label: "GitHub", icon: "fab fa-github" },
+  { href: "https://briskwoods.itch.io/", label: "itch.io", icon: "fab fa-itch-io" },
+  { href: "https://www.youtube.com/@Briskwoods", label: "YouTube", icon: "fab fa-youtube" },
+];
+---
+
+<section id="contact" class="section contact">
+  <div class="wrap contact__inner reveal">
+    <h2>Let's talk</h2>
+    <p>Whether it's Son of Mabin, a collaboration, or just game dev talk — my inbox is open.</p>
+    <a class="btn btn--primary btn--lg" href="mailto:jeffrey.gichuki@virdanelabs.com">jeffrey.gichuki@virdanelabs.com</a>
+
+    <div class="contact__social">
+      {socials.map((s) => (
+        <a href={s.href} target="_blank" aria-label={s.label} rel="noopener noreferrer">
+          <i class={s.icon} aria-hidden="true"></i>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

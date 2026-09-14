@@ -1,0 +1,357 @@
+---
+// GitHub source for the snippets grid below. Change these to point at your own
+// public repo — the folder must contain code files with @title / @description /
+// @category / @tags metadata comments at the top, same as before.
+const GITHUB_USERNAME = "Briskwoods";
+const GITHUB_REPO = "SonOfMabinSnippets";
+const GITHUB_BRANCH = "main";
+const SNIPPETS_FOLDER = "snippets";
+
+const categories = [
+  { id: "all", label: "All Snippets" },
+  { id: "patterns", label: "Design Patterns" },
+  { id: "systems", label: "Game Systems" },
+  { id: "utilities", label: "Utilities" },
+  { id: "optimization", label: "Optimization" },
+];
+---
+
+<!-- Prism.js: syntax highlighting for the snippet modal -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+<section id="snippets" class="section">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <h2>Code Snippets</h2>
+      <p>
+        Browse through examples of my code demonstrating design patterns, system architecture,
+        and best practices. All snippets are loaded directly from my GitHub repository.
+      </p>
+    </div>
+
+    <div class="code-categories reveal" role="group" aria-label="Filter snippets by category">
+      {categories.map((cat, i) => (
+        <button class:list={["category-btn", { active: i === 0 }]} data-category={cat.id} type="button">
+          {cat.label}
+        </button>
+      ))}
+    </div>
+
+    <div id="code-loading" class="code-loading">
+      <div class="spinner"></div>
+      <p>Loading code snippets from GitHub...</p>
+    </div>
+
+    <div id="code-error" class="code-error" style="display: none;">
+      <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+      <p>Unable to load code snippets. Please check back later.</p>
+      <small>Make sure the GitHub repository is public and contains the snippets folder.</small>
+    </div>
+
+    <div id="snippets-container" class="snippets-grid reveal"></div>
+
+    <div id="snippet-modal" class="snippet-modal" style="display: none;">
+      <div class="snippet-modal-content">
+        <div class="snippet-modal-header">
+          <h3 id="modal-title"></h3>
+          <div class="snippet-modal-actions">
+            <button class="modal-copy-btn" id="modal-copy-btn" type="button">
+              <i class="fas fa-copy" aria-hidden="true"></i> Copy
+            </button>
+            <a class="modal-github-link" id="modal-github-link" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-github" aria-hidden="true"></i> View on GitHub
+            </a>
+            <button class="modal-close-btn" id="modal-close-btn" type="button" aria-label="Close">
+              <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <div class="snippet-modal-body">
+          <pre class="line-numbers"><code id="modal-code" class="language-csharp"></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" is:inline></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js" is:inline></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" is:inline></script>
+
+<script
+  define:vars={{
+    ghUsername: GITHUB_USERNAME,
+    ghRepo: GITHUB_REPO,
+    ghBranch: GITHUB_BRANCH,
+    ghFolder: SNIPPETS_FOLDER,
+  }}
+>
+  (function () {
+    "use strict";
+
+    const config = { username: ghUsername, repo: ghRepo, branch: ghBranch, folder: ghFolder };
+
+    let allSnippets = [];
+    let currentCategory = "all";
+
+    const fetchGitHubContents = async () => {
+      const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${config.folder}?ref=${config.branch}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+      return response.json();
+    };
+
+    const fetchFileContent = async (downloadUrl) => {
+      const response = await fetch(downloadUrl);
+      if (!response.ok) throw new Error(`Failed to fetch file: ${response.status}`);
+      return response.text();
+    };
+
+    const getLanguageFromExtension = (filename) => {
+      const ext = filename.split(".").pop().toLowerCase();
+      const langMap = {
+        cs: "csharp", js: "javascript", ts: "typescript", jsx: "jsx", tsx: "tsx",
+        py: "python", java: "java", cpp: "cpp", c: "c", go: "go", rs: "rust", php: "php", rb: "ruby",
+      };
+      return langMap[ext] || "csharp";
+    };
+
+    const parseSnippetMetadata = (content, filename) => {
+      const lines = content.split("\n");
+      const metadata = {
+        title: filename.replace(/\.(cs|js|py|java|cpp|c|ts|jsx|tsx)$/i, ""),
+        description: "",
+        category: "utilities",
+        categories: [],
+        language: getLanguageFromExtension(filename),
+        tags: [],
+      };
+
+      for (let i = 0; i < Math.min(20, lines.length); i++) {
+        const line = lines[i].trim();
+
+        if (line.includes("@title:")) {
+          metadata.title = line.split("@title:")[1].trim().replace(/[*/]/g, "");
+        }
+        if (line.includes("@description:")) {
+          metadata.description = line.split("@description:")[1].trim().replace(/[*/]/g, "");
+        }
+        if (line.includes("@category:")) {
+          const categoryStr = line.split("@category:")[1].trim().toLowerCase().replace(/[*/]/g, "");
+          const cats = categoryStr.split(",").map((c) => c.trim()).filter(Boolean);
+          if (cats.length > 0) {
+            metadata.category = cats[0];
+            metadata.categories = cats;
+          }
+        }
+        if (line.includes("@tags:")) {
+          const tagsStr = line.split("@tags:")[1].trim().replace(/[*/]/g, "");
+          metadata.tags = tagsStr.split(",").map((t) => t.trim());
+        }
+      }
+
+      if (!metadata.description) {
+        const summaryMatch =
+          content.match(/\/\/\/?\s*<summary>([\s\S]*?)<\/summary>/i) || content.match(/\/\*\*([\s\S]*?)\*\//);
+        if (summaryMatch) {
+          metadata.description = summaryMatch[1]
+            .replace(/<\/?summary>/gi, "")
+            .replace(/\/\/\/?\s*/g, "")
+            .replace(/\*+\/?/g, "")
+            .trim()
+            .split("\n")[0];
+        }
+      }
+
+      return metadata;
+    };
+
+    const escapeHtml = (text) => {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
+    const createSnippetCard = (snippet) => {
+      const card = document.createElement("div");
+      card.className = "snippet-card";
+      card.dataset.category = snippet.metadata.category;
+      card.dataset.categories = snippet.metadata.categories.join(",");
+
+      const categoryBadges = snippet.metadata.categories.length
+        ? snippet.metadata.categories.map((cat) => `<span class="snippet-category">${cat}</span>`).join(" ")
+        : `<span class="snippet-category">${snippet.metadata.category}</span>`;
+
+      card.innerHTML = `
+        <div class="snippet-card-header">
+          <h4 class="snippet-title">${escapeHtml(snippet.metadata.title)}</h4>
+          <span class="snippet-language">${snippet.metadata.language}</span>
+        </div>
+        <p class="snippet-description">${escapeHtml(snippet.metadata.description || "Click to view code")}</p>
+        <div class="snippet-meta">
+          <span><i class="fas fa-code"></i> ${snippet.lines} lines</span>
+          ${snippet.metadata.tags.length ? `<span><i class="fas fa-tags"></i> ${snippet.metadata.tags.slice(0, 2).join(", ")}</span>` : ""}
+        </div>
+        <div class="snippet-categories">${categoryBadges}</div>
+      `;
+
+      card.addEventListener("click", () => openSnippetModal(snippet));
+      return card;
+    };
+
+    const renderSnippets = () => {
+      const container = document.getElementById("snippets-container");
+      container.innerHTML = "";
+
+      const filtered =
+        currentCategory === "all"
+          ? allSnippets
+          : allSnippets.filter((s) =>
+              s.metadata.categories.length
+                ? s.metadata.categories.includes(currentCategory)
+                : s.metadata.category === currentCategory
+            );
+
+      if (!filtered.length) {
+        container.innerHTML = `
+          <div class="code-error">
+            <i class="fas fa-folder-open"></i>
+            <p>No snippets found in this category.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach((snippet) => container.appendChild(createSnippetCard(snippet)));
+    };
+
+    const openSnippetModal = (snippet) => {
+      const modal = document.getElementById("snippet-modal");
+      const modalTitle = document.getElementById("modal-title");
+      const modalCode = document.getElementById("modal-code");
+      const modalGithubLink = document.getElementById("modal-github-link");
+
+      modalTitle.textContent = snippet.metadata.title;
+      modalCode.textContent = snippet.content;
+      modalCode.className = `language-${snippet.metadata.language}`;
+
+      modalGithubLink.href = `https://github.com/${config.username}/${config.repo}/blob/${config.branch}/${config.folder}/${snippet.filename}`;
+
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+
+      if (window.Prism) window.Prism.highlightElement(modalCode);
+    };
+
+    const closeSnippetModal = () => {
+      const modal = document.getElementById("snippet-modal");
+      modal.style.display = "none";
+      document.body.style.overflow = "";
+    };
+
+    const initCategoryFilters = () => {
+      const buttons = document.querySelectorAll(".category-btn");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          buttons.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentCategory = btn.dataset.category;
+          renderSnippets();
+        });
+      });
+    };
+
+    const initModalInteractions = () => {
+      const modal = document.getElementById("snippet-modal");
+      const closeBtn = document.getElementById("modal-close-btn");
+      const copyBtn = document.getElementById("modal-copy-btn");
+
+      closeBtn.addEventListener("click", closeSnippetModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeSnippetModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.style.display === "flex") closeSnippetModal();
+      });
+
+      copyBtn.addEventListener("click", async () => {
+        const code = document.getElementById("modal-code").textContent;
+        try {
+          await navigator.clipboard.writeText(code);
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          copyBtn.classList.add("copied");
+          setTimeout(() => {
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+            copyBtn.classList.remove("copied");
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to copy:", err);
+        }
+      });
+    };
+
+    const loadSnippets = async () => {
+      const loadingEl = document.getElementById("code-loading");
+      const errorEl = document.getElementById("code-error");
+      const containerEl = document.getElementById("snippets-container");
+
+      try {
+        loadingEl.style.display = "flex";
+        errorEl.style.display = "none";
+        containerEl.innerHTML = "";
+
+        const files = await fetchGitHubContents();
+        const codeFiles = files.filter(
+          (file) => file.type === "file" && /\.(cs|js|py|java|cpp|c|ts|jsx|tsx)$/i.test(file.name)
+        );
+
+        if (!codeFiles.length) throw new Error("No code files found in the repository");
+
+        allSnippets = await Promise.all(
+          codeFiles.map(async (file) => {
+            try {
+              const content = await fetchFileContent(file.download_url);
+              const metadata = parseSnippetMetadata(content, file.name);
+              return { filename: file.name, content, lines: content.split("\n").length, metadata, url: file.html_url };
+            } catch (err) {
+              console.error(`Failed to load ${file.name}:`, err);
+              return null;
+            }
+          })
+        );
+
+        allSnippets = allSnippets.filter(Boolean);
+        allSnippets.sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
+
+        loadingEl.style.display = "none";
+        renderSnippets();
+      } catch (error) {
+        console.error("Error loading snippets:", error);
+        loadingEl.style.display = "none";
+        errorEl.style.display = "block";
+
+        if (String(error.message).includes("404")) {
+          errorEl.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Repository not found.</p>
+            <small>Make sure the repository "${config.username}/${config.repo}" exists and is public.</small>
+          `;
+        }
+      }
+    };
+
+    const init = () => {
+      if (!document.getElementById("snippets-container")) return;
+      initCategoryFilters();
+      initModalInteractions();
+      loadSnippets();
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>

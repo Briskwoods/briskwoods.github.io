@@ -1,69 +1,61 @@
-# [Start Bootstrap - Resume](https://startbootstrap.com/theme/resume/)
+# Briskwoods — Jeffrey Gichuki
 
-[Resume](https://startbootstrap.com/theme/resume/) is a resume and CV theme for [Bootstrap](https://getbootstrap.com/) created by [Start Bootstrap](https://startbootstrap.com/). This theme features a fixed sidebar with content sections to build a simple, yet elegant resume.
+Personal portfolio site, rebuilt with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com).
+Deploys automatically to GitHub Pages on every push to `main`.
 
-## Preview
+## Local development
 
-[![Resume Preview](https://assets.startbootstrap.com/img/screenshots/themes/resume.png)](https://startbootstrap.github.io/startbootstrap-resume/)
+```bash
+npm install
+npm run dev
+```
 
-**[View Live Preview](https://startbootstrap.github.io/startbootstrap-resume/)**
+Opens at `http://localhost:4321`.
 
-## Status
+```bash
+npm run build     # builds the static site into dist/
+npm run preview   # preview the production build locally
+```
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/StartBootstrap/startbootstrap-resume/master/LICENSE)
-[![npm version](https://img.shields.io/npm/v/startbootstrap-resume.svg)](https://www.npmjs.com/package/startbootstrap-resume)
+## Deployment (GitHub Pages)
 
-## Download and Installation
+This repo includes `.github/workflows/deploy.yml`, which builds and deploys the site automatically
+on every push to `main` — no manual steps needed, similar to a Vercel auto-deploy.
 
-To begin using this template, choose one of the following options to get started:
+**One-time setup**, after you push this repo to GitHub:
 
-- [Download the latest release on Start Bootstrap](https://startbootstrap.com/theme/resume/)
-- Install using npm: `npm i startbootstrap-resume`
-- Clone the repo: `git clone https://github.com/StartBootstrap/startbootstrap-resume.git`
-- [Fork, Clone, or Download on GitHub](https://github.com/StartBootstrap/startbootstrap-resume)
+1. Go to your repo's **Settings → Pages**.
+2. Under "Build and deployment", set **Source** to **GitHub Actions**.
+3. Push to `main` — the workflow builds the site and publishes it. Check the **Actions** tab for
+   progress; your live URL is shown there and in Settings → Pages once the first deploy finishes.
 
-## Usage
+This repo is set up as a **user page** (`briskwoods.github.io`), which GitHub Pages serves at the
+domain root. If you ever move this to a different repo name (a *project* page instead), you'll
+need to set a `base` path in `astro.config.mjs` — see the comment there.
 
-### Basic Usage
+## Project structure
 
-After downloading, simply edit the HTML and CSS files included with `dist` directory. These are the only files you need to worry about, you can ignore everything else! To preview the changes you make to the code, you can open the `index.html` file in your web browser.
+```
+src/
+  layouts/Layout.astro     — <head>, fonts, meta tags, pre-paint theme script
+  components/               — one component per section (Hero, Work, Experience, ...)
+  styles/global.css         — design tokens (colors, fonts) + component styles
+  pages/index.astro         — assembles the page
+public/                      — static files served as-is (favicons, résumé PDF, profile photo)
+```
 
-### Advanced Usage
+## Notable features
 
-Clone the source files of the theme and navigate into the theme's root directory. Run `npm install` and then run `npm start` which will open up a preview of the template in your default browser, watch for changes to core template files, and live reload the browser when changes are saved. You can view the `package.json` file to see which scripts are included.
+- **Dark/light theme toggle** — persists to `localStorage`, respects system preference on first
+  visit, and sets the theme before paint to avoid a flash of the wrong theme.
+- **Code Snippets section** — fetches code files client-side from a public GitHub repo
+  (`Briskwoods/SonOfMabinSnippets` by default) and renders them with category filters and a
+  syntax-highlighted modal (via Prism.js). Configure the source repo in
+  `src/components/CodeSnippets.astro`.
+- **Scroll-reveal animations** and a **mobile nav** — plain JS, no framework runtime needed.
 
-#### npm Scripts
+## Notable details
 
-- `npm run build` builds the project - this builds assets, HTML, JS, and CSS into `dist`
-- `npm run build:assets` copies the files in the `src/assets/` directory into `dist`
-- `npm run build:pug` compiles the Pug located in the `src/pug/` directory into `dist`
-- `npm run build:scripts` brings the `src/js/scripts.js` file into `dist`
-- `npm run build:scss` compiles the SCSS files located in the `src/scss/` directory into `dist`
-- `npm run clean` deletes the `dist` directory to prepare for rebuilding the project
-- `npm run start:debug` runs the project in debug mode
-- `npm start` or `npm run start` runs the project, launches a live preview in your default browser, and watches for changes made to files in `src`
-
-You must have npm installed in order to use this build environment.
-
-## Bugs and Issues
-
-Have a bug or an issue with this template? [Open a new issue](https://github.com/StartBootstrap/startbootstrap-resume/issues) here on GitHub or leave a comment on the [theme overview page at Start Bootstrap](https://startbootstrap.com/theme/resume/).
-
-## About
-
-Start Bootstrap is an open source library of free Bootstrap themes and templates. All of the free themes and templates on Start Bootstrap are released under the MIT license, which means you can use them for any purpose, even for commercial projects.
-
-- <https://startbootstrap.com>
-- <https://twitter.com/SBootstrap>
-
-Start Bootstrap was created by and is maintained by **[David Miller](https://davidmiller.io/)**.
-
-- <https://davidmiller.io>
-- <https://twitter.com/davidmillerhere>
-- <https://github.com/davidtmiller>
-
-Start Bootstrap is based on the [Bootstrap](https://getbootstrap.com/) framework created by [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
-
-## Copyright and License
-
-Copyright 2013-2023 Start Bootstrap LLC. Code released under the [MIT](https://github.com/StartBootstrap/startbootstrap-resume/blob/master/LICENSE) license.
+- The **Millionaire Life** project icon is hotlinked from CrazyGames' image CDN rather than stored
+  locally (no local icon file existed for it). If you'd rather self-host it, save a copy to
+  `public/icons/millionaire-life.png` and update the `icon` path in `src/components/Projects.astro`.

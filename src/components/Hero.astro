@@ -1,0 +1,60 @@
+---
+const socials = [
+  { href: "https://www.linkedin.com/in/jeffrey-gichuki-710011144/", label: "LinkedIn", icon: "fab fa-linkedin-in" },
+  { href: "https://github.com/Briskwoods", label: "GitHub", icon: "fab fa-github" },
+  { href: "https://briskwoods.itch.io/", label: "itch.io", icon: "fab fa-itch-io" },
+  { href: "https://www.youtube.com/@Briskwoods", label: "YouTube", icon: "fab fa-youtube" },
+  { href: "mailto:jeffrey.gichuki@virdanelabs.com", label: "Email", icon: "fa-regular fa-envelope" },
+];
+---
+
+<section id="top" class="hero">
+  <div class="hero__field" aria-hidden="true">
+    <span class="hero__blob hero__blob--1"></span>
+    <span class="hero__blob hero__blob--2"></span>
+    <span class="hero__blob hero__blob--3"></span>
+    <span class="hero__grid"></span>
+  </div>
+
+  <div class="wrap hero__inner" id="about">
+    <div class="hero__text">
+      <p class="hero__kicker">
+        <span class="dot" aria-hidden="true"></span>
+        Nairobi, Kenya — currently building Son of Mabin
+      </p>
+
+      <h1 class="hero__title">
+        Jeffrey Gichuki makes<br />
+        narrative-driven games<br />
+        <span class="hero__title-accent">people remember.</span>
+      </h1>
+
+      <p class="hero__lede">
+        I'm the Founder, Lead Developer, Programer and Designer of Virdane Labs. I care about clean, modular code and
+        about making fun and engaging games with Impactful Narratives.
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#work">See the work</a>
+        <a class="btn btn--ghost" href="/jeffrey-gichuki-resume.pdf" target="_blank">Download résumé</a>
+      </div>
+
+      <div class="hero__social">
+        {socials.map((s) => (
+          <a href={s.href} target="_blank" aria-label={s.label} rel="noopener noreferrer">
+            <i class={s.icon} aria-hidden="true"></i>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="hero__portrait">
+      <span class="hero__portrait-ring"></span>
+      <img src="/profile.jpg" alt="Portrait of Jeffrey Gichuki" width="420" height="420" />
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#work" aria-label="Scroll to work">
+    <span></span>
+  </a>
+</section>

@@ -1,0 +1,36 @@
+---
+const links = [
+  { href: "#work", label: "Work" },
+  { href: "#projects", label: "Projects" },
+  { href: "#videos", label: "Videos" },
+  { href: "#experience", label: "Experience" },
+  { href: "#skills", label: "Skills" },
+  { href: "#recognition", label: "Recognition" },
+  { href: "#snippets", label: "Code" },
+  { href: "#contact", label: "Contact" },
+];
+---
+
+<header class="site-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__brand" href="#top">Jeff Gichuki</a>
+
+    <nav class="site-nav__links" aria-label="Primary">
+      {links.map((link) => <a href={link.href}>{link.label}</a>)}
+    </nav>
+
+    <div class="site-nav__actions">
+      <button class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false">
+        <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        <i class="fa-solid fa-sun" aria-hidden="true"></i>
+      </button>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobileNav" class="mobile-nav" aria-label="Mobile">
+    {links.map((link) => <a href={link.href}>{link.label}</a>)}
+  </nav>
+</header>
