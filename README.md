@@ -54,8 +54,3 @@ public/                      — static files served as-is (favicons, résumé P
   `src/components/CodeSnippets.astro`.
 - **Scroll-reveal animations** and a **mobile nav** — plain JS, no framework runtime needed.
 
-## Notable details
-
-- The **Millionaire Life** project icon is hotlinked from CrazyGames' image CDN rather than stored
-  locally (no local icon file existed for it). If you'd rather self-host it, save a copy to
-  `public/icons/millionaire-life.png` and update the `icon` path in `src/components/Projects.astro`.
