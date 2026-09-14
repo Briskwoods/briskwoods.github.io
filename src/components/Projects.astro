@@ -1,0 +1,88 @@
+---
+const groups = [
+  {
+    studio: "Virdane Labs",
+    projects: [
+      {
+        name: "Son of Mabin",
+        href: "https://www.virdanelabs.com/games/son-of-mabin",
+        icon: "/son-of-mabin-title.png",
+      },
+      {
+        name: "Rachel's Grasp",
+        href: "https://virdanelabs.itch.io/rachel",
+        icon: "/icons/rachel.png",
+      },
+      {
+        name: "Night of The Undead",
+        href: "https://virdanelabs.itch.io/night-of-the-undead",
+        icon: "/icons/night-of-the-undead.png",
+      },
+      {
+        name: "Foxy's Adventure",
+        href: "https://virdanelabs.itch.io/foxys-adventure",
+        icon: "https://img.itch.zone/aW1hZ2UvNTc0NDk1LzMwMjI1MTUucG5n/original/XSd2R5.png",
+      },
+    ],
+  },
+  {
+    studio: "Mekan Games Ltd.",
+    projects: [
+      {
+        name: "The President",
+        href: "https://play.google.com/store/apps/details?id=com.BeautifullyMadeGames.ThePresident&hl=en&gl=US&pli=1",
+        icon: "/icons/the-president.png",
+      },
+      {
+        name: "The Secret Service",
+        href: "https://play.google.com/store/apps/details?id=com.BeautifullyMadeGames.TheSecretService&hl=en&gl=US",
+        icon: "/icons/the-secret-service.png",
+      },
+      {
+        name: "Weld Masters",
+        href: "https://play.google.com/store/apps/details?id=com.BeautifullyMadeGames.WeldMasters&hl=en&gl=US",
+        icon: "/icons/weld-masters.png",
+      },
+      {
+        name: "Millionaire Life",
+        href: "https://www.crazygames.com/game/millionaire-life",
+        icon: "https://imgs.crazygames.com/millionaire-life_16x9/20260121091144/millionaire-life_16x9-cover?metadata=none&quality=100&width=200&height=200&fit=crop&format=png",
+      },
+      {
+        name: "Wrestling Run",
+        href: "https://play.google.com/store/apps/details?id=com.BeautifullyMadeGames.WrestlingRun&hl=en&gl=US",
+        icon: "/icons/wrestling-run.png",
+      },
+    ],
+  },
+];
+---
+
+<section id="projects" class="section section--alt">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <h2>Projects</h2>
+      <p>Every game with my name on it, shipped or in progress — grouped by studio.</p>
+    </div>
+
+    {groups.map((group) => (
+      <div class="project-group reveal">
+        <p class="project-group__heading">{group.studio}</p>
+        <div class="project-icons" role="list" aria-label={`${group.studio} projects`}>
+          {group.projects.map((p) => (
+            <a class="project-icon" href={p.href} target="_blank" rel="noopener noreferrer" title={p.name}>
+              {p.icon ? (
+                <img class="project-icon__img" src={p.icon} alt={`${p.name} icon`} loading="lazy" />
+              ) : (
+                <span class="project-icon__img project-icon__img--placeholder" aria-hidden="true">
+                  <i class="fa-solid fa-gamepad"></i>
+                </span>
+              )}
+              <span class="project-icon__label">{p.name}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

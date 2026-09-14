@@ -1,0 +1,44 @@
+---
+const videos = [
+  {
+    title: "My Portfolio Video",
+    subtitle: "Professional Portfolio.",
+    src: "https://www.youtube.com/embed/B83mLP0L52k?si=Bzf62O_zm7JANx47",
+    caption: "Jeffrey Gichuki Portfolio Video - Professional and Personal Game Projects",
+  },
+  {
+    title: "Hyper-Casual Highlight Reel",
+    subtitle: "A subset of the games worked on whilst at Mekan Games Ltd.",
+    src: "https://www.youtube.com/embed/5erxgMN9r70?si=CwcarIhtiMli1MSq",
+    caption: "Hyper-Casual Games Highlight Reel from Mekan Games Ltd",
+  },
+];
+---
+
+<section id="videos" class="section">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <h2>Videos</h2>
+      <p>A couple of reels — one covering everything, one just the hyper-casual work.</p>
+    </div>
+
+    <div class="video-grid reveal">
+      {videos.map((v) => (
+        <div class="video-card">
+          <h3>{v.title}</h3>
+          <p>{v.subtitle}</p>
+          <div class="video-frame">
+            <iframe
+              src={v.src}
+              title={v.caption}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
