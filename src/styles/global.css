@@ -20,6 +20,12 @@
   --nav-height: 76px;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Hero rhythm — single source of truth so nothing drifts between breakpoints */
+  --hero-line-height: 1.05;
+  --hero-gap-sm: clamp(1rem, 2.5vh, 1.75rem);
+  --hero-gap-md: clamp(1.25rem, 3.5vh, 2.5rem);
+  --hero-gap-lg: clamp(1.5rem, 4.5vh, 3rem);
 }
 
 :root,
@@ -85,7 +91,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.01em;
-  line-height: 1.05;
+  line-height: var(--hero-line-height);
   margin: 0;
   color: var(--ink);
 }
@@ -173,9 +179,10 @@ img {
   background: rgba(139, 92, 246, 0.08);
 }
 
+/* Scales continuously instead of staying chunky on small screens */
 .btn--lg {
-  padding: 1.1rem 2rem;
-  font-size: 1.05rem;
+  padding: clamp(0.85rem, 2.5vw, 1.1rem) clamp(1.4rem, 4vw, 2rem);
+  font-size: clamp(0.9rem, 2.6vw, 1.05rem);
 }
 
 /* ==========================================================================
@@ -334,11 +341,13 @@ img {
    Hero
    ========================================================================== */
 
+/* align-items: start (not center) — centring doubles any height change,
+   so every wrap or font-size shift moved the buttons twice as far. */
 .hero {
   position: relative;
   min-height: 100svh;
   display: flex;
-  align-items: center;
+  align-items: start;
   padding-top: var(--nav-height);
   overflow: hidden;
 }
@@ -402,8 +411,9 @@ img {
 .hero__inner {
   position: relative;
   z-index: 1;
-  padding-top: 4rem;
-  padding-bottom: 6rem;
+  width: 100%;
+  padding-top: clamp(2rem, 8vh, 5rem);
+  padding-bottom: clamp(3rem, 8vh, 6rem);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
@@ -427,9 +437,9 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2.4vw, 0.9rem);
   color: var(--ink-soft);
-  margin: 0 0 1.75rem;
+  margin: 0 0 var(--hero-gap-sm);
 }
 .hero__kicker .dot {
   width: 8px;
@@ -439,9 +449,13 @@ img {
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--violet) 18%, transparent);
 }
 
+/* One continuous curve across every width. The old setup had a base clamp
+   and a 560px override that resolved to opposite ends of their ranges,
+   so the title jumped ~6px taller right at the breakpoint. */
 .hero__title {
-  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-size: clamp(2rem, 1.4rem + 4.5vw, 5rem);
   max-width: 16ch;
+  min-height: calc(3 * var(--hero-line-height) * 1em);
 }
 
 .hero__title-accent {
@@ -452,22 +466,29 @@ img {
 }
 
 .hero__lede {
-  margin-top: 1.75rem;
-  font-size: 1.15rem;
+  margin-top: var(--hero-gap-sm);
+  font-size: clamp(1rem, 2.8vw, 1.15rem);
   max-width: 46ch;
 }
 
+/* Grid, not wrapping flex — the button row now switches from 2-up to 1-up
+   at a known breakpoint instead of dropping whenever the text stops fitting. */
 .hero__actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: 2.5rem;
+  margin-top: var(--hero-gap-md);
+  max-width: 28rem;
+}
+.hero__actions .btn {
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .hero__social {
   display: flex;
   gap: 1.1rem;
-  margin-top: 3rem;
+  margin-top: var(--hero-gap-lg);
 }
 .hero__social a {
   width: 42px;
@@ -509,6 +530,13 @@ img {
   0% { transform: translateY(0); opacity: 1; }
   70% { transform: translateY(14px); opacity: 0; }
   100% { transform: translateY(0); opacity: 0; }
+}
+
+/* Desktop headline reliably fits two lines, so reserve less there */
+@media (min-width: 901px) {
+  .hero__title {
+    min-height: calc(2 * var(--hero-line-height) * 1em);
+  }
 }
 
 /* ==========================================================================
@@ -1187,15 +1215,20 @@ img {
     display: flex;
   }
 
+  /* Stacked instead of "auto 1fr". Side by side, the text column width was
+     100% - min(140px, 34vw) - gap, which changes non-linearly around 412px
+     and made the headline rewrap unpredictably. */
   .hero__inner {
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: 1.25rem;
+    grid-template-columns: 1fr;
+    gap: var(--hero-gap-sm);
     padding-top: 2.5rem;
+    padding-bottom: 4rem;
+    justify-items: start;
   }
   .hero__portrait {
     order: -1;
-    width: min(140px, 34vw);
+    width: clamp(110px, 28vw, 160px);
+    justify-self: start;
     margin-bottom: 0;
   }
 
@@ -1223,8 +1256,10 @@ img {
   .section {
     padding: 4.5rem 0;
   }
-  .hero__title {
-    font-size: clamp(2.2rem, 10vw, 3rem);
+  /* No .hero__title override here — the single clamp above handles it */
+  .hero__actions {
+    grid-template-columns: 1fr;
+    max-width: 22rem;
   }
   .education__item {
     flex-direction: column;
