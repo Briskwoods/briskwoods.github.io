@@ -1220,16 +1220,52 @@ img {
      and made the headline rewrap unpredictably. */
   .hero__inner {
     grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
     gap: var(--hero-gap-sm);
     padding-top: 2.5rem;
     padding-bottom: 4rem;
-    justify-items: start;
   }
+
+  /* Dissolve the copy wrapper so kicker/title/lede/actions/social become
+     direct grid items and can be reordered around the portrait */
+  .hero__inner > :not(.hero__portrait) {
+    display: contents;
+  }
+
+  .hero__kicker   { order: 1; }
+  .hero__portrait { order: 2; }
+  .hero__title    { order: 3; }
+  .hero__lede     { order: 4; }
+  .hero__actions  { order: 5; }
+  .hero__social   { order: 6; }
+
+  /* Spacing now comes from the grid gap, not stacked margins */
+  .hero__kicker,
+  .hero__title,
+  .hero__lede,
+  .hero__actions,
+  .hero__social {
+    margin: 0;
+  }
+
   .hero__portrait {
-    order: -1;
-    width: clamp(110px, 28vw, 160px);
-    justify-self: start;
+    width: clamp(150px, 45vw, 240px);
+    justify-self: center;
     margin-bottom: 0;
+  }
+
+  .hero__title {
+    max-width: 18ch;
+  }
+
+  .hero__lede {
+    max-width: 38ch;
+  }
+
+  .hero__actions,
+  .hero__social {
+    justify-self: center;
   }
 
   .project--featured {
