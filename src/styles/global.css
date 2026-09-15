@@ -1268,6 +1268,20 @@ img {
     justify-self: center;
   }
 
+  /* The scroll indicator was pinned to the bottom of .hero via
+     position: absolute, which worked when content fit inside 100svh.
+     Now that mobile content (portrait + copy + buttons + social) is
+     taller than the viewport, that "bottom" sits mid-content and
+     overlaps the social row. Take it out of absolute flow instead. */
+  .hero {
+    flex-direction: column;
+  }
+  .hero__scroll {
+    position: static;
+    transform: none;
+    margin: var(--hero-gap-lg) auto 0;
+  }
+
   .project--featured {
     grid-template-columns: 1fr;
   }
